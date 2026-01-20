@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/design-system.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <h1 class="page-title">Employees</h1>
+
+    <div id="app"></div>
+    
+    <!-- ========== TEMPLATE: LISTA DE EMPLEADOS ========== -->
+    <template id="employee-list-template">
+        <div class="employee-list">
+            <div class="header">
+                <button id="add-employee-btn" class="btn btn-primary">
+                    New Employee
+                </button>
+            </div>
+            
+            <div class="table-container">
+                <table class="employee-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="employee-table-body">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </template>
+    
+    <!-- ========== TEMPLATE: FILA DE EMPLEADO ========== -->
+    <template id="employee-row-template">
+        <tr>
+            <td data-field="employeeNo"></td>
+            <td data-field="firstName"></td>
+            <td data-field="lastName"></td>
+            <td>
+                <span class="status-badge" data-field="status"></span>
+            </td>
+            <td>
+                <button class="btn btn-edit" title="Edit">
+                    <i class="fas fa-pen"></i>
+                </button>
+                <button class="btn btn-danger btn-delete" title="Delete">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        </tr>
+    </template>
+    
+    <!-- ========== TEMPLATE: FORMULARIO DE EMPLEADO ========== -->
+    <template id="employee-form-template">
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb" id="breadcrumb-container" style="display: none;">
+            <span class="breadcrumb-item">Employee</span>
+            <span class="breadcrumb-separator">></span>
+            <span class="breadcrumb-item" id="breadcrumb-name">John Smith</span>
+        </nav>
+
+        <div class="employee-form">
+            <div class="form-header">
+                <h1 id="form-title">Add Employee</h1>
+                <button type="button" id="back-btn" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to List
+                </button>
+            </div>
+            
+            <form id="employee-form" class="form">
+                <!-- First Name y Last Name en dos columnas -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">First Name *</label>
+                        <input 
+                            type="text" 
+                            id="firstName" 
+                            name="firstName" 
+                            required 
+                            maxlength="50"
+                            placeholder="John"
+                        >
+                        <span class="error-message" data-error="firstName"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="lastName">Last Name *</label>
+                        <input 
+                            type="text" 
+                            id="lastName" 
+                            name="lastName" 
+                            required 
+                            maxlength="50"
+                            placeholder="Smith"
+                        >
+                        <span class="error-message" data-error="lastName"></span>
+                    </div>
+                </div>
+                
+                <!-- ID en una sola columna -->
+                <div class="form-group">
+                    <label for="employeeNo">ID *</label>
+                    <input 
+                        type="text" 
+                        id="employeeNo" 
+                        name="employeeNo" 
+                        required 
+                        maxlength="20"
+                        placeholder="14578956"
+                    >
+                    <span class="error-message" data-error="employeeNo"></span>
+                </div>
+                
+                <!-- SSN en una sola columna -->
+                <div class="form-group">
+                    <label for="ssn">SSN *</label>
+                    <input 
+                        type="text" 
+                        id="ssn" 
+                        name="ssn" 
+                        required 
+                        maxlength="11"
+                        placeholder="111-11-1111"
+                    >
+                    <span class="error-message" data-error="ssn"></span>
+                </div>
+                
+                <!-- Fechas (ocultas pero necesarias para la API) -->
+                <div class="form-group" style="display: none;">
+                    <input 
+                        type="date" 
+                        id="employmentStartDate" 
+                        name="employmentStartDate"
+                    >
+                </div>
+                
+                <div class="form-group" style="display: none;">
+                    <input 
+                        type="date" 
+                        id="employmentEndDate" 
+                        name="employmentEndDate"
+                    >
+                </div>
+                
+                <div class="form-group-checkbox">
+                    <label for="status" class="checkbox-label">
+                        <input 
+                            type="checkbox" 
+                            id="status" 
+                            name="status"
+                            checked
+                        >
+                        <span>Active</span>
+                    </label>
+                </div>
+                
+                <div class="form-actions-right">
+                    <button type="submit" class="btn btn-primary" id="submit-btn">
+                        Save Employee
+                    </button>
+                </div>
+            </form>
+        </div>
+    </template>
+    
+    <!-- ========== LOADING ========== -->
+    <template id="loading-template">
+        <div class="loading">
+            <p>Loading employees...</p>
+        </div>
+    </template>
+    
+    <!-- ========== ERROR ========== -->
+    <template id="error-template">
+        <div class="error">
+            <h2>Error</h2>
+            <p data-field="message"></p>
+            <button id="retry-btn" class="btn btn-primary">Retry</button>
+        </div>
+    </template>
+
+    <!-- ========== MODAL DE CONFIRMACIÓN DE ELIMINACIÓN ========== -->
+    <template id="delete-confirmation-modal">
+        <div class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="modal-text">
+                    <p>Are you sure you want</p>
+                    <p>to remove this employee?</p>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn-modal-cancel" id="modal-cancel">CANCEL</button>
+                    <button class="btn-modal-confirm" id="modal-confirm">YES, REMOVE</button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- ========== MODAL DE ÉXITO ========== -->
+    <template id="success-modal">
+        <div class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-icon modal-icon-success">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="modal-text">
+                    <p data-field="success-message">Employee saved successfully!</p>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn-modal-success" id="modal-ok">OK</button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- ========== MODAL DE ERROR ========== -->
+    <template id="error-modal">
+        <div class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-icon modal-icon-error">
+                    <i class="fas fa-exclamation-circle"></i>
+                </div>
+                <div class="modal-text">
+                    <p data-field="error-message">An error occurred</p>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn-modal-error" id="modal-ok-error">OK</button>
+                </div>
+            </div>
+        </div>
+    </template>
+    
+    <script type="module" src="/dist/app.js"></script>
+</body>
+</html>

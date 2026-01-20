@@ -1,0 +1,21 @@
+{
+  "scripts": 
+  {
+    "build": "tsc",
+    "dev": "concurrently \"tsc --watch\" \"lite-server\"",
+    "start": "npm run dev"
+  },
+  "name": "employeemanagementapp",
+  "version": "1.0.0",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^25.0.9",
+    "typescript": "^5.9.3",
+    "webpack": "^5.104.1",
+    "webpack-cli": "^6.0.1"
+  }
+}

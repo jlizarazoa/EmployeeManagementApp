@@ -29,19 +29,19 @@ The application follows the **MVVM pattern**:
 - **ViewModel**  
   Contains the application logic, manages state, handles user interactions, and communicates with the service layer.
 
-## 📝 Assumptions
+## Assumptions
 1. **Date Fields**: Employment start/end dates are hidden and auto-populated 
    with current date since they weren't in the mockups
 2. **SSN Format**: Enforces US SSN format (XXX-XX-XXXX) as shown in API examples
 3. **User Context**: `LastUpdatedBy` is hardcoded as 'testUser' for demo purposes
 4. **UUID Generation**: Client-side UUID generation for new employee IDs
 
-## ✨ Additional Features Implemented
-- ✅ **Responsive Design**: Media queries for 768px and 480px breakpoints
-- ✅ **SSN Format Validation**: Enforces XXX-XX-XXXX format with descriptive errors
-- ✅ **Success Modals**: Professional feedback for create/update/delete operations
-- ✅ **Error Modals**: User-friendly error handling instead of browser alerts
-- ✅ **Breadcrumb Navigation**: Shows context when editing (Employee > Name)
+## Additional Features Implemented
+- **Responsive Design**: Media queries for 768px and 480px breakpoints
+- **SSN Format Validation**: Enforces XXX-XX-XXXX format with descriptive errors
+- **Success Modals**: Professional feedback for create/update/delete operations
+- **Error Modals**: User-friendly error handling instead of browser alerts
+- **Breadcrumb Navigation**: Shows context when editing (Employee > Name)
 
 ## API Integration
 Communication with the backend is encapsulated in a dedicated service layer:
